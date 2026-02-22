@@ -1,11 +1,184 @@
-Design a desktop application for Hospital Management System. 
-Below is the stack trace to use:
-Programming: Python
-Database: SQL Lite which is inbuilt available in Python
-Application Type: Rich Desktop Application
-Architecture: Best available, which should be a loosely coupled applications use concepts like dependency injection
-Location of project: E:\
+Below is a structured Business Requirements Blueprint for a Hospital Management System (HMS) tailored for super specialty hospitals. It’s organized by domains and priorities (Must/Should/Could) to guide scope, design, and implementation.
+Business Objectives
+•	Provide end-to-end patient care coordination across OPD, IPD, ICU, ER, OT, diagnostics, and specialty units.
+•	Improve clinical quality and patient safety with accurate, timely clinical data and decision support.
+•	Optimize operational efficiency: bed/OT utilization, staffing, inventory, billing, and revenue cycle.
+•	Ensure regulatory compliance, data security, and interoperability with external systems.
+•	Enable analytics for clinical outcomes, costs, and administrative KPIs.
+Key Stakeholders
+•	Clinical: Physicians (by specialty), Surgeons, Anesthesiologists, Intensivists, Nurses, Allied Health (PT/OT, Dieticians), Pharmacists, Lab/Radiology Technologists.
+•	Administrative: Front Desk, Medical Records/Health Information Management, Billing & Finance, Insurance/TPA Desk, Quality & Compliance, Materials/Procurement, Biomedical Engineering, Housekeeping, Security.
+•	Patients and Caregivers.
+•	IT/Operations: System Admins, Network, Security, Data Analysts.
+Scope Overview (Major Modules)
+•	Patient Administration: Registration, EMR/EHR, Appointments, Queue, Bed Management.
+•	Clinical Care: CPOE, eMAR, Nursing, Care Plans, Clinical Documentation, CDS.
+•	Specialty Units: ER, ICU, OT/Perioperative, Cath Lab, Oncology, Dialysis, Transplant, NICU/PICU, Rehab.
+•	Diagnostics: LIS (Lab), RIS/PACS (Radiology), Blood Bank, CSSD, Infection Control.
+•	Pharmacy & Inventory: Inpatient/Outpatient Pharmacy, Formulary, Inventory, Procurement.
+•	Billing & Revenue Cycle: Charges, Packages, Insurance/TPA, Claims, Reconciliation.
+•	Compliance & Security: Audit, Privacy, Consent, Quality Indicators.
+•	Interoperability & Devices: HL7/FHIR, DICOM, Device Integrations.
+•	Reporting & Analytics: Operational, Clinical, Financial KPIs, Dashboards.
+•	Support Services: Dietary, Housekeeping, Transport, Biomedical Maintenance.
+Functional Requirements (Prioritized)
+1.	Patient Administration and EMR
+•	Patient Registration and Identity (M) 
+o	Master patient index, duplicate detection/merge, multiple identifiers (MRN, national ID).
+o	Demographics, contacts, insurance, consent, emergency contacts, preferred language.
+•	Appointment and Scheduling (M) 
+o	Multi-physician and resource scheduling, templates, reminder notifications, waitlist, no-show tracking.
+•	Queue and Token Management (S) 
+o	Real-time queue boards for OPD, ER triage prioritization.
+•	Bed and Ward Management (M) 
+o	Bed status (available/occupied/cleaning/maintenance), transfers, discharge planning, isolation flags.
+•	Electronic Medical Record (M) 
+o	Longitudinal chart by encounter; problem list; allergies; vitals; notes; attachments; clinical timelines.
+•	Clinical Coding and Classifications (M) 
+o	ICD-10/11 diagnoses, CPT/HCPCS procedures, LOINC labs, SNOMED CT concepts mapping.
+•	Patient Portals/Kiosks (S) 
+o	View appointments, reports, billing, consents; payment; self-check-in.
+2.	Clinical Care and Safety
+•	Computerized Physician Order Entry—CPOE (M) 
+o	Orders for meds, labs, imaging, procedures, diets, nursing tasks; order sets; priority/STAT.
+•	Medication Management and eMAR (M) 
+o	Inpatient and outpatient prescribing; dose/route/frequency; barcode medication administration; PRN logic.
+o	Drug–drug, drug–allergy, and dose range checks; renal/hepatic dosing guidance (CDS).
+•	Nursing and Care Plans (M) 
+o	Shift assessments, vitals, intake/output, risk scores (falls, pressure ulcers), nursing tasks and handoffs.
+•	Clinical Documentation (M) 
+o	Specialty-specific templates (cardiology, oncology, transplant, ICU); progress notes; discharge summaries.
+•	Clinical Decision Support (M) 
+o	Alerts and reminders (critical labs, sepsis risk, antimicrobial stewardship), evidence-linked order sets.
+•	Consent and Advance Directives (M) 
+o	Informed consent templates with e-signature; DNR/AND flags; research/trial consent capture.
+•	Telemedicine/Tele-ICU (C) 
+o	Virtual consults, remote monitoring dashboards, secure video.
+3.	Specialty and Critical Care
+•	Emergency Department (M) 
+o	Triage levels, trauma workflows, code pathways (stroke, STEMI), fast-track, medicolegal case handling.
+•	ICU/CCU/NICU/PICU (M) 
+o	Device/vitals integration; sedation/pain scores; ventilator settings; weaning protocols; rounds checklists.
+•	Operating Theaters & Perioperative (M) 
+o	Pre-op assessment, surgical scheduling, instrument sets, AIMS (anesthesia records), timeouts, implants, postop orders, sterilization tracking (link to CSSD).
+•	Cath Lab/Cardiology (S) 
+o	Procedure logs, hemodynamics data, stent/implant registry, echo/cath images via PACS link.
+•	Oncology (S) 
+o	Chemotherapy protocols, regimen scheduling, cumulative dose calculations, toxicity grading.
+•	Dialysis (S) 
+o	Session prescriptions, machine parameters, access site tracking.
+•	Transplant (S) 
+o	Donor/recipient matching data, waiting lists, crossmatch results, regulatory documentation.
+4.	Diagnostics and Imaging
+•	Laboratory Information System—LIS (M) 
+o	Order management, sample collection/barcoding, analyzer interfaces, delta checks, reflex testing, critical value alerts, validation, result release.
+•	Radiology/RIS & PACS (M) 
+o	Modality worklists, protocoling, dose tracking, reporting with templates, voice dictation, structured reports, image viewing.
+•	Blood Bank (S) 
+o	Donor management, component inventory, crossmatching, transfusion reactions, traceability.
+•	Infection Control (S) 
+o	Notifiable diseases, culture/sensitivity trends, MDRO dashboards, outbreak alerts.
+•	CSSD/Sterilization (S) 
+o	Instrument sets tracking, sterilization cycles, load traceability to patient/case.
+5.	Pharmacy, Inventory, and Procurement
+•	Pharmacy (M) 
+o	Formulary management, stock at ward/pharmacy, substitution rules, compounded meds, narcotics control.
+•	Inventory & Supply Chain (M) 
+o	Purchase requests, POs, receipts, GRNs, batch/lot/expiry, min/max levels, vendor management.
+•	Biomedical, Housekeeping, Transport (S) 
+o	Asset register, preventive maintenance, job tickets; cleaning schedules; porter requests and SLAs.
+6.	Billing and Revenue Cycle
+•	Patient Billing (M) 
+o	Price lists, bed/ward/class tariffs, procedure packages, professional fees, consumables, discounts and approvals.
+•	Insurance/TPA and Claims (M) 
+o	Eligibility, pre-authorization, utilization tracking, claim generation, attachments, denial management.
+•	Payments and Reconciliation (M) 
+o	Cash/card/online wallets, deposits, refunds; daily close and GL export; integration with accounting/ERP.
+•	Costing and Profitability (S) 
+o	Service-line costing, margin analysis, implant/consumable cost tracking.
+7.	Interoperability, Devices, and Integrations
+•	Standards Support (M) 
+o	HL7 v2/v3, FHIR APIs, DICOM for imaging; IHE profiles where applicable.
+•	Device Integrations (S) 
+o	Vitals monitors, ventilators, infusion pumps, point-of-care devices; middleware mapping and validation.
+•	Government/HIE/eRx Links (C) 
+o	Immunization registries, e-prescribing networks, national IDs, public health reporting.
+8.	Compliance, Privacy, and Quality
+•	Security and Privacy (M) 
+o	RBAC, least privilege, attribute-based controls for sensitive notes; MFA; SSO with AD/LDAP; encryption in transit/at rest; audit trails and tamper evidence.
+•	Regulatory and Accreditation (M) 
+o	HIPAA/GDPR (as applicable), JCI/NABH, blood bank and radiology regulations, retention policies, data residency.
+•	Clinical Quality & Safety (S) 
+o	Incident reporting, near-miss logs, mortality/morbidity reviews, bundles compliance, PROMs/PREMs.
+•	Legal/Medico-Legal (M) 
+o	Chain of custody for samples, consent storage, medico-legal case flags, subpoena-ready record extracts.
+9.	Reporting, Analytics, and BI
+•	Operational Dashboards (M) 
+o	Bed occupancy, ALOS, ER wait times, OT utilization, lab TATs, pharmacy turnaround.
+•	Clinical Outcomes (S) 
+o	Infection rates, readmissions, sepsis bundles, antibiotic days of therapy.
+•	Financial & RCM (M) 
+o	DSO, denial rates, collection efficiency, revenue by service line.
+•	Self-Service Reporting (S) 
+o	Ad hoc report builder with governance; export to CSV/PDF.
+10.	Communication and Collaboration
+•	Secure Messaging and Alerts (S) 
+o	Role-based messaging, critical results acknowledgment, escalation policies, on-call rosters.
+•	Task and Handover (S) 
+o	Checklists, SBAR handovers, discharge coordination tasks.
+Data Model Essentials
+•	Core Entities: Patient, Encounter (OP/IP/ER), Provider, Order, Result, Medication, Procedure, Diagnosis, Bed, Visit Notes, Consent, Invoice, Claim, Payment, Inventory Item, Purchase Order, Asset, User/Role.
+•	Master Data: Departments, Wards, Beds, Services, Price Lists, Formularies, Lab Test Catalogs, Imaging Modalities, Order Sets, Clinical Templates.
+•	Auditability: Immutable audit trails for create/read/update/delete, with user, time, reason.
+Non-Functional Requirements (NFRs)
+•	Performance (M): Sub-2s response for common flows; scalable concurrent users; background job queues for heavy tasks.
+•	Availability and Resilience (M): 99.9%+ uptime target; automatic failover, backups (RPO ≤ 15 min; RTO ≤ 1 hr); offline caching for critical areas if network drops.
+•	Security (M): Encryption, MFA, SSO, device posture checks; data masking; break-glass with justification.
+•	Maintainability and Extensibility (M): Modular architecture, plugin support, configuration over customization, versioned APIs, event bus for integrations.
+•	Usability and Accessibility (M): Role-based UX, keyboard-first data entry, large-print themes, WCAG where feasible, localization/time zones.
+•	Audit/Logging/Monitoring (M): Centralized logs, SIEM integration, alerting on anomalies.
+•	Deployment and Updates (M): Auto-updater for desktop clients, zero/low-downtime releases, signed binaries.
+•	Data Governance (M): Master data stewardship, deduplication, data quality rules.
+•	Compliance Retention (M): Record retention schedules; secure archival and legal holds.
+Workflow Highlights (Examples)
+•	ER Triage to Admission: Register/identify → triage score → orders → bed request → admit to ICU/ward; track KPIs (door-to-needle, door-to-balloon).
+•	Perioperative: Pre-op clearance → OT scheduling → instrument set & implant reservation → anesthesia record → intra-op documentation → PACU → post-op orders → discharge.
+•	Inpatient Medication: Physician orders → pharmacist verification → dispensing → bedside barcode scan → eMAR update → adverse event capture.
+•	Lab Order to Result: CPOE → specimen barcoding → analyzer interface → validation → release → critical alert to provider → patient portal.
+•	Discharge and Billing: Clinical clearance → medication reconciliation → discharge summary → final bill aggregation → insurance claim → payment and closure.
+Special Considerations for Super Specialty Hospitals
+•	High-acuity monitoring and complex protocols (ICU, transplant, oncology, cardiology).
+•	Implant and device traceability end-to-end (from procurement to patient).
+•	Advanced CDS and protocol-driven care pathways (e.g., sepsis, chemo regimens).
+•	Research and Clinical Trials support: subject screening flags, visit schedules, blinded meds, source data linkage (optional).
+•	Multisite and Referral Management: Cross-facility patient records, hub-and-spoke care coordination.
+Desktop Application Architecture Considerations (Python)
+•	Client-Server Model: Desktop client (e.g., PySide/PyQt) with a secure API backend (e.g., FastAPI) and RDBMS (e.g., PostgreSQL).
+•	Sync and Offline: Local encrypted cache for critical flows; conflict resolution strategies.
+•	Imaging and Standards: DICOM handling via a PACS (e.g., via standard protocols); HL7/FHIR via integration services.
+•	Device Connectivity: Use a gateway service for medical device protocols; validation and mapping layer.
+•	Printing/Labeling: Barcode and wristband printing, sample labels, prescriptions, invoices.
+•	Upgrades: Signed auto-updates; migration scripts for schema; feature flagging.
+•	Observability: Built-in error reporting, health checks, usage analytics (privacy-aware).
+Compliance and Risk Controls
+•	User Provisioning: Automated onboarding/offboarding, periodic access reviews, SoD checks.
+•	Data Protection: PHI minimization in logs, secure backups, encrypted exports, watermarking for printed PDFs.
+•	Break-Glass Access: Emergency override with reason capture and retrospective review.
+•	Business Continuity: Downtime procedures for ER/ICU/OR/pharmacy/lab; printable downtime packs.
+KPIs and Success Metrics
+•	Clinical: ICU mortality, readmission rate, time to antibiotics, surgical site infection rate.
+•	Operational: Bed occupancy, ALOS, OT utilization, lab TAT, pharmacy turnaround.
+•	Financial: Net collection rate, DSO, denial rate, average revenue per encounter.
+•	User Adoption: Order entry rate, documentation completion times, alert override rates.
+Phased Implementation Roadmap (Suggested)
+•	Phase 1 (Core): Registration, EMR basics, CPOE, eMAR, LIS, RIS/PACS integration, bed mgmt, billing/RCM, pharmacy, security/compliance baseline.
+•	Phase 2 (Critical Care & OT): ICU/AIMS, OT management, sterilization/CSSD, infection control, device integrations.
+•	Phase 3 (Specialties & Optimization): Oncology, dialysis, transplant workflows, advanced CDS, patient portal, analytics/BI, inventory optimization.
+•	Phase 4 (Interoperability & Research): HIE/eRx, research modules, advanced quality dashboards.
+Acceptance Criteria Examples
+•	Medication barcode scan achieves ≥ 95% bedside administration capture with alert on mismatches.
+•	Critical lab values alert relevant provider within 5 minutes with acknowledgment capture.
+•	99% of lab orders use barcoded specimens with analyzer interfacing and no manual re-entry.
+•	Discharge summaries available within 30 minutes post-final order with templated structure.
+•	Average OPD check-in to consultation start ≤ 20 minutes at steady state.
 
-Phase 1 Requirement:
-Develop a separate window which will initially register the hospitals, consider all the mandatory fields required to register a hospital
-Create tables accordingly to save the hospital details
