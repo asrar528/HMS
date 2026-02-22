@@ -1,0 +1,12 @@
+Design a desktop application for Hospital Management System. 
+Below is the stack trace to use:
+Programming: Python
+Database: SQL Lite which is inbuilt available in Python
+Application Type: Rich Desktop Application
+Architecture: Best available, which should be a loosely coupled applications use concepts like dependency injection
+Location of project: E:\
+
+Phase 1 Requirement:
+Develop a separate window which will initially register the hospitals, consider all the mandatory fields required to register a hospital
+Create tables accordingly to save the hospital details
+Once the registration is completed, create a landing page for the Hospital which will contain the OPD and IPD menu options
