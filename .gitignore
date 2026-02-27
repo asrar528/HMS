@@ -10,9 +10,14 @@ __pycache__/
 venv/
 env/
 
+# Environment / secrets  ← NEVER commit the real .env
+.env
+
 # Database files
 data/
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 
@@ -26,3 +31,6 @@ build/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Logs
+*.log

@@ -60,6 +60,19 @@ class IHospitalService(ABC):
     def is_first_run(self) -> bool:
         """Return True when no hospitals have been registered yet."""
 
+    @abstractmethod
+    def search_hospitals(
+        self,
+        name: Optional[str] = None,
+        hospital_id: Optional[int] = None,
+        city: Optional[str] = None,
+    ) -> List[Hospital]:
+        """Search hospitals by name, id, and/or city."""
+
+    @abstractmethod
+    def update_hospital(self, hospital: Hospital) -> ServiceResult:
+        """Validate and persist updates to an existing hospital."""
+
 
 # ---------------------------------------------------------------------------
 # Concrete Implementation
@@ -109,6 +122,31 @@ class HospitalService(IHospitalService):
 
     def is_first_run(self) -> bool:
         return len(self._repo.find_all(active_only=False)) == 0
+
+    def search_hospitals(
+        self,
+        name: Optional[str] = None,
+        hospital_id: Optional[int] = None,
+        city: Optional[str] = None,
+    ) -> List[Hospital]:
+        """Delegate search to the repository."""
+        return self._repo.search(name=name, hospital_id=hospital_id, city=city)
+
+    def update_hospital(self, hospital: Hospital) -> ServiceResult:
+        """Validate all fields, check uniqueness (excluding self), then update."""
+        if hospital.id is None:
+            return ServiceResult.fail("Cannot update a hospital without an id.")
+        validation = self._validate(hospital)
+        if not validation.success:
+            return validation
+        try:
+            saved = self._repo.update(hospital)
+            return ServiceResult.ok(
+                f"Hospital '{saved.hospital_name}' updated successfully.",
+                data=saved,
+            )
+        except Exception as exc:
+            return ServiceResult.fail(f"Database error: {exc}")
 
     # ------------------------------------------------------------------
     # Validation

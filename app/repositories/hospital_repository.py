@@ -52,6 +52,16 @@ class IHospitalRepository(ABC):
     def exists_license_number(self, license_no: str, exclude_id: Optional[int] = None) -> bool:
         """Check uniqueness of a license number."""
 
+    @abstractmethod
+    def search(
+        self,
+        name: Optional[str] = None,
+        hospital_id: Optional[int] = None,
+        city: Optional[str] = None,
+        active_only: bool = True,
+    ) -> List[Hospital]:
+        """Return hospitals matching any combination of name / id / city filters."""
+
 
 # ---------------------------------------------------------------------------
 # SQLite Implementation
@@ -197,6 +207,40 @@ class HospitalRepository(IHospitalRepository):
             sql += " WHERE is_active = 1"
         sql += " ORDER BY hospital_name"
         cursor = self._db.execute(sql, params)
+        return [Hospital.from_row(row) for row in cursor.fetchall()]
+
+    def search(
+        self,
+        name: Optional[str] = None,
+        hospital_id: Optional[int] = None,
+        city: Optional[str] = None,
+        active_only: bool = True,
+    ) -> List[Hospital]:
+        """Dynamic search using any combination of name / id / city filters."""
+        conditions: list[str] = []
+        params: list = []
+
+        if active_only:
+            conditions.append("is_active = 1")
+
+        if hospital_id is not None:
+            conditions.append("id = ?")
+            params.append(hospital_id)
+
+        if name:
+            conditions.append("hospital_name LIKE ?")
+            params.append(f"%{name}%")
+
+        if city:
+            conditions.append("city LIKE ?")
+            params.append(f"%{city}%")
+
+        sql = f"SELECT {_SELECT_COLS} FROM hospitals"
+        if conditions:
+            sql += " WHERE " + " AND ".join(conditions)
+        sql += " ORDER BY hospital_name"
+
+        cursor = self._db.execute(sql, tuple(params))
         return [Hospital.from_row(row) for row in cursor.fetchall()]
 
     # ------------------------------------------------------------------

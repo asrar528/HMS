@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}HMS – Hospitals{% endblock %}
+{% block header_title %}Hospital Management System{% endblock %}
+{% block header_sub %}Hospital Directory{% endblock %}
+
+{% block body %}
+<div class="hms-page-bg py-4 px-3 px-md-5">
+
+  <!-- ====================================================================
+       SEARCH & ACTIONS TOOLBAR
+       ==================================================================== -->
+  <div class="hms-search-toolbar mb-4">
+
+    <!-- Toolbar heading row -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h5 class="mb-0 hms-toolbar-heading">
+        <i class="bi bi-search me-2 text-primary"></i>Search Hospitals
+      </h5>
+      <a href="{{ url_for('web.register') }}" class="btn hms-btn-register px-4">
+        <i class="bi bi-plus-circle-fill me-1"></i>Register New Hospital
+      </a>
+    </div>
+
+    <!-- Search form -->
+    <form method="GET" action="{{ url_for('web.index') }}" novalidate>
+      <div class="row g-3 align-items-end">
+
+        <!-- Hospital ID -->
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          <label class="form-label">Hospital ID</label>
+          <input type="number" name="hospital_id" class="form-control {% if id_error %}is-invalid{% endif %}"
+                 placeholder="e.g. 1" value="{{ q_id }}" min="1" />
+          {% if id_error %}
+            <div class="invalid-feedback">{{ id_error }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Hospital Name -->
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <label class="form-label">Hospital Name</label>
+          <input type="text" name="name" class="form-control"
+                 placeholder="Partial name…" value="{{ q_name }}" />
+        </div>
+
+        <!-- City -->
+        <div class="col-sm-6 col-md-3 col-lg-2">
+          <label class="form-label">City</label>
+          <input type="text" name="city" class="form-control"
+                 placeholder="e.g. Mumbai" value="{{ q_city }}" />
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-sm-6 col-md-auto d-flex gap-2">
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-search me-1"></i>Search
+          </button>
+          <a href="{{ url_for('web.index') }}" class="btn btn-outline-secondary px-3">
+            <i class="bi bi-x-circle me-1"></i>Clear
+          </a>
+        </div>
+
+      </div>
+    </form>
+  </div><!-- /.hms-search-toolbar -->
+
+
+  <!-- ====================================================================
+       RESULTS SECTION
+       ==================================================================== -->
+  <div class="hms-card p-0">
+
+    <!-- Card header – result count -->
+    <div class="hms-card-header px-4 py-2 d-flex align-items-center justify-content-between">
+      <span>
+        <i class="bi bi-table me-2"></i>
+        {% if searching %}
+          Search Results
+        {% else %}
+          All Registered Hospitals
+        {% endif %}
+      </span>
+      <span class="badge bg-primary rounded-pill">{{ hospitals | length }} record{{ 's' if hospitals | length != 1 }}</span>
+    </div>
+
+    {% if hospitals %}
+    <!-- Responsive table -->
+    <div class="table-responsive">
+      <table class="table hms-table mb-0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Hospital Name</th>
+            <th>Type</th>
+            <th>Specialization</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Beds</th>
+            <th>Primary Phone</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in hospitals %}
+          <tr>
+            <td class="text-muted small">{{ h.id }}</td>
+            <td class="fw-semibold">{{ h.hospital_name }}</td>
+            <td>
+              <span class="hms-badge-type">{{ h.hospital_type }}</span>
+            </td>
+            <td class="text-muted small">{{ h.specialization_type }}</td>
+            <td>{{ h.city }}</td>
+            <td class="text-muted small">{{ h.state }}</td>
+            <td class="text-center">{{ h.total_beds }}</td>
+            <td class="text-muted small">{{ h.phone_primary }}</td>
+            <td class="text-center">
+              <a href="{{ url_for('web.dashboard', hospital_id=h.id) }}"
+                 class="btn btn-sm hms-btn-view">
+                <i class="bi bi-eye-fill me-1"></i>View
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="text-center py-5 px-4">
+      {% if searching %}
+        <i class="bi bi-search text-muted" style="font-size:2.5rem;"></i>
+        <p class="mt-3 text-muted">No hospitals matched your search criteria.</p>
+        <a href="{{ url_for('web.index') }}" class="btn btn-outline-primary btn-sm mt-1">
+          <i class="bi bi-arrow-left me-1"></i>Show All
+        </a>
+      {% else %}
+        <i class="bi bi-hospital text-muted" style="font-size:2.5rem;"></i>
+        <p class="mt-3 text-muted">No hospitals have been registered yet.</p>
+        <a href="{{ url_for('web.register') }}" class="btn hms-btn-register mt-1">
+          <i class="bi bi-plus-circle-fill me-1"></i>Register First Hospital
+        </a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div><!-- /.hms-card -->
+
+</div><!-- /.hms-page-bg -->
+{% endblock %}

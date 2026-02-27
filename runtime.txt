@@ -1,0 +1,2 @@
+# runtime.txt – tells Railway, Render, and Heroku which Python to use
+python-3.11.5
