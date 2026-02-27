@@ -19,6 +19,7 @@ identical to the original desktop application.
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -28,6 +29,16 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+
+# ---------------------------------------------------------------------------
+# Load .env file when running locally (python-dotenv).
+# In production (Railway / Render / PythonAnywhere) real env vars are used.
+# ---------------------------------------------------------------------------
+try:
+    from dotenv import load_dotenv
+    load_dotenv(PROJECT_ROOT / ".env")
+except ImportError:
+    pass  # python-dotenv not installed – rely on real environment variables
 
 # ---------------------------------------------------------------------------
 # Third-party
@@ -52,7 +63,10 @@ from app.web.routes import web_bp
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-DB_PATH = PROJECT_ROOT / "data" / "hms.db"
+# In production set DATA_DIR env var to a persistent disk path (e.g. /data).
+# Locally it defaults to <project_root>/data/
+DATA_DIR = Path(os.environ.get("DATA_DIR", str(PROJECT_ROOT / "data")))
+DB_PATH  = DATA_DIR / "hms.db"
 
 
 # ---------------------------------------------------------------------------
@@ -87,9 +101,13 @@ def _bootstrap_container(ioc: DIContainer) -> None:
 
 def create_app() -> Flask:
     """
-    Create and configure the Flask application.
+    Flask application factory.
 
-    1. Bootstrap the DI container.
+    Called by gunicorn in production:  gunicorn "main:create_app()"
+    Called directly in development:    python main.py
+
+    Steps:
+    1. Bootstrap DI container.
     2. Run database migrations.
     3. Register the web blueprint.
     """
@@ -98,7 +116,19 @@ def create_app() -> Flask:
         template_folder="app/templates",
         static_folder="app/static",
     )
-    app.secret_key = "hms-flask-secret-2026"   # change in production
+
+    # SECRET_KEY must be set via environment variable in production.
+    # A missing key raises at startup so it is never silently insecure.
+    secret = os.environ.get("SECRET_KEY")
+    if not secret:
+        if os.environ.get("FLASK_ENV") == "production":
+            raise RuntimeError(
+                "SECRET_KEY environment variable is not set. "
+                "Set it before starting the server in production."
+            )
+        # Development fallback – never used in production
+        secret = "hms-dev-only-secret-change-me"
+    app.secret_key = secret
 
     # 1. Wire dependencies
     _bootstrap_container(container)
@@ -114,15 +144,17 @@ def create_app() -> Flask:
 
 
 # ---------------------------------------------------------------------------
-# Entry Point
+# Entry Point  (development only – production uses gunicorn)
 # ---------------------------------------------------------------------------
 
 def main() -> None:
     app = create_app()
+    port  = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_ENV", "development") != "production"
     print("\n  HMS Web Application")
     print("  -------------------")
-    print("  Open http://127.0.0.1:5000 in your browser\n")
-    app.run(debug=True, port=5000, use_reloader=False)
+    print(f"  Open http://127.0.0.1:{port} in your browser\n")
+    app.run(debug=debug, port=port, use_reloader=False)
 
 
 if __name__ == "__main__":

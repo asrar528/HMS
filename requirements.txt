@@ -7,3 +7,12 @@
 # Web application
 flask>=3.0.0
 flask-wtf>=1.2.1
+
+# Production WSGI server
+# gunicorn  – Linux / macOS cloud hosts (Railway, Render, PythonAnywhere)
+gunicorn>=21.2.0
+# waitress  – Windows-compatible production server (optional local use)
+waitress>=3.0.0
+
+# Environment variable management
+python-dotenv>=1.0.0
