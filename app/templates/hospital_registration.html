@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}HMS – Hospital Registration{% endblock %}
+
+{% block header_sub %}New Hospital Registration{% endblock %}
+
+{% block body %}
+<div class="hms-page-bg py-4 px-3 px-md-5">
+
+  <!-- Error banner -->
+  {% if error %}
+  <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('web.register') }}" novalidate>
+
+    <!-- ================================================================
+         FORM CARD
+         ================================================================ -->
+    <div class="hms-card p-4 p-md-5">
+
+      <h4 class="hms-form-title mb-1">Hospital Registration Form</h4>
+      <p class="text-muted small mb-4">Fields marked with <span class="text-danger">*</span> are mandatory.</p>
+
+      <!-- ──────────────────────────────────────────────
+           SECTION 1 – Hospital Identity
+           ────────────────────────────────────────────── -->
+      <div class="hms-section-label">1. &nbsp; Hospital Identity</div>
+      <div class="row g-3 mt-0 mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Hospital Name <span class="text-danger">*</span></label>
+          <input type="text" name="hospital_name" class="form-control"
+                 value="{{ form_data.get('hospital_name', '') }}" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Registration No. <span class="text-danger">*</span></label>
+          <input type="text" name="registration_number" class="form-control"
+                 value="{{ form_data.get('registration_number', '') }}" required />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Hospital Type <span class="text-danger">*</span></label>
+          <select name="hospital_type" class="form-select" required>
+            <option value="">— Select —</option>
+            {% for t in hospital_types %}
+              <option value="{{ t }}" {{ 'selected' if form_data.get('hospital_type') == t }}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Specialization <span class="text-danger">*</span></label>
+          <select name="specialization_type" class="form-select" required>
+            <option value="">— Select —</option>
+            {% for s in specialization_types %}
+              <option value="{{ s }}" {{ 'selected' if form_data.get('specialization_type') == s }}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Established Year <span class="text-danger">*</span></label>
+          <input type="number" name="established_year" class="form-control" min="1800" max="2026"
+                 placeholder="e.g. 1995"
+                 value="{{ form_data.get('established_year', '') }}" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Accreditation</label>
+          <select name="accreditation" class="form-select">
+            {% for a in accreditation_options %}
+              <option value="{{ a }}" {{ 'selected' if form_data.get('accreditation', 'None') == a }}>{{ a }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">GSTIN</label>
+          <input type="text" name="gstin" class="form-control" placeholder="Optional"
+                 value="{{ form_data.get('gstin', '') }}" />
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────
+           SECTION 2 – Address & Location
+           ────────────────────────────────────────────── -->
+      <div class="hms-section-label">2. &nbsp; Address &amp; Location</div>
+      <div class="row g-3 mt-0 mb-3">
+        <div class="col-12">
+          <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+          <input type="text" name="address_line1" class="form-control"
+                 value="{{ form_data.get('address_line1', '') }}" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Address Line 2</label>
+          <input type="text" name="address_line2" class="form-control" placeholder="Optional"
+                 value="{{ form_data.get('address_line2', '') }}" />
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">City <span class="text-danger">*</span></label>
+          <input type="text" name="city" class="form-control"
+                 value="{{ form_data.get('city', '') }}" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">State <span class="text-danger">*</span></label>
+          <select name="state" class="form-select" required>
+            <option value="">— Select State —</option>
+            {% for st in india_states %}
+              <option value="{{ st }}" {{ 'selected' if form_data.get('state') == st }}>{{ st }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">PIN Code <span class="text-danger">*</span></label>
+          <input type="text" name="pin_code" class="form-control" placeholder="400001"
+                 value="{{ form_data.get('pin_code', '') }}" required />
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Country <span class="text-danger">*</span></label>
+          <input type="text" name="country" class="form-control"
+                 value="{{ form_data.get('country', 'India') }}" required />
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────
+           SECTION 3 – Contact Information
+           ────────────────────────────────────────────── -->
+      <div class="hms-section-label">3. &nbsp; Contact Information</div>
+      <div class="row g-3 mt-0 mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Primary Phone <span class="text-danger">*</span></label>
+          <input type="tel" name="phone_primary" class="form-control" placeholder="+91XXXXXXXXXX"
+                 value="{{ form_data.get('phone_primary', '') }}" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Alternate Phone</label>
+          <input type="tel" name="phone_alternate" class="form-control" placeholder="Optional"
+                 value="{{ form_data.get('phone_alternate', '') }}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Emergency Contact <span class="text-danger">*</span></label>
+          <input type="tel" name="emergency_contact" class="form-control" placeholder="+91XXXXXXXXXX"
+                 value="{{ form_data.get('emergency_contact', '') }}" required />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Email Address <span class="text-danger">*</span></label>
+          <input type="email" name="email" class="form-control" placeholder="admin@hospital.com"
+                 value="{{ form_data.get('email', '') }}" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Website</label>
+          <input type="url" name="website" class="form-control" placeholder="https://www.hospital.com (Optional)"
+                 value="{{ form_data.get('website', '') }}" />
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────
+           SECTION 4 – Capacity & Infrastructure
+           ────────────────────────────────────────────── -->
+      <div class="hms-section-label">4. &nbsp; Capacity &amp; Infrastructure</div>
+      <div class="row g-3 mt-0 mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Total Beds <span class="text-danger">*</span></label>
+          <input type="number" name="total_beds" class="form-control" min="1" placeholder="e.g. 200"
+                 value="{{ form_data.get('total_beds', '') }}" required />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">ICU Beds</label>
+          <input type="number" name="icu_beds" class="form-control" min="0" placeholder="e.g. 20"
+                 value="{{ form_data.get('icu_beds', 0) }}" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Operation Theaters</label>
+          <input type="number" name="operation_theaters" class="form-control" min="0" placeholder="e.g. 5"
+                 value="{{ form_data.get('operation_theaters', 0) }}" />
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────
+           SECTION 5 – Administration & Licensing
+           ────────────────────────────────────────────── -->
+      <div class="hms-section-label">5. &nbsp; Administration &amp; Licensing</div>
+      <div class="row g-3 mt-0 mb-4">
+        <div class="col-md-6">
+          <label class="form-label">Administrator / CEO Name <span class="text-danger">*</span></label>
+          <input type="text" name="administrator_name" class="form-control"
+                 value="{{ form_data.get('administrator_name', '') }}" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">License Number <span class="text-danger">*</span></label>
+          <input type="text" name="license_number" class="form-control"
+                 value="{{ form_data.get('license_number', '') }}" required />
+        </div>
+      </div>
+
+      <!-- ──────────────────────────────────────────────
+           ACTION BUTTONS
+           ────────────────────────────────────────────── -->
+      <div class="d-flex justify-content-end gap-3">
+        <button type="reset" class="btn btn-secondary px-4">
+          <i class="bi bi-eraser me-1"></i> Clear Form
+        </button>
+        <button type="submit" class="btn hms-btn-register px-5">
+          <i class="bi bi-check2-circle me-1"></i> Register Hospital
+        </button>
+      </div>
+
+    </div><!-- /.hms-card -->
+  </form>
+</div>
+{% endblock %}

@@ -1,4 +1,9 @@
 # HMS – Python dependencies
 # Install with: pip install -r requirements.txt
 
-customtkinter>=5.2.2
+# Desktop (kept for reference, not required for web)
+# customtkinter>=5.2.2
+
+# Web application
+flask>=3.0.0
+flask-wtf>=1.2.1

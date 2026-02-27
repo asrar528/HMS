@@ -1,0 +1,256 @@
+/* ============================================================
+   HMS – Custom Stylesheet
+   Colour palette mirrors the original customtkinter desktop app:
+     Header BG : #1565C0  (deep blue)
+     Accent    : #1976D2
+     Section BG: #E3F2FD  (light blue)
+     Success   : #2E7D32
+     Error     : #C62828
+   ============================================================ */
+
+/* ---------- Reset / base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body.hms-body {
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #F0F4F8;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Top header bar ---------- */
+.hms-header {
+  background: #1565C0;
+  color: #fff;
+  height: 64px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,.30);
+  z-index: 100;
+}
+
+.hms-header-logo {
+  color: #90CAF9;
+}
+
+.hms-header-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .02em;
+}
+
+.hms-header-sub {
+  font-size: .78rem;
+  color: #BBDEFB;
+}
+
+.hms-badge-active {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-size: .78rem;
+  padding: .35em .7em;
+  border-radius: 20px;
+}
+
+/* ---------- Flash messages ---------- */
+.flash-container { flex-shrink: 0; }
+
+/* ---------- Full-height shell (sidebar + main) ---------- */
+.hms-shell {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+.hms-sidebar {
+  width: 230px;
+  min-width: 230px;
+  background: #1E3A5F;
+  color: #fff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.hms-sidebar-logo {
+  font-size: .72rem;
+  letter-spacing: .1em;
+  color: rgba(255,255,255,.45);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.hms-nav-list { margin: 0; padding: 0; }
+
+.hms-nav-item {
+  display: flex;
+  align-items: center;
+  color: #ECEFF1;
+  text-decoration: none;
+  padding: .75rem 1.25rem;
+  font-size: .9rem;
+  font-weight: 500;
+  transition: background .15s, color .15s;
+  border-left: 3px solid transparent;
+}
+
+.hms-nav-item:hover {
+  background: #1976D2;
+  color: #fff;
+  border-left-color: #90CAF9;
+}
+
+.hms-nav-item.active {
+  background: #1976D2;
+  color: #fff;
+  border-left-color: #90CAF9;
+}
+
+/* ---------- Main content area ---------- */
+.hms-main {
+  overflow-y: auto;
+  background: #F0F4F8;
+}
+
+.hms-page-heading {
+  color: #1976D2;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+/* ---------- Page background (registration) ---------- */
+.hms-page-bg {
+  min-height: calc(100vh - 64px);
+  background: #F0F4F8;
+}
+
+/* ---------- Cards ---------- */
+.hms-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.hms-card-header {
+  background: #E3F2FD;
+  color: #1565C0;
+  font-weight: 600;
+  font-size: .92rem;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid #BBDEFB;
+}
+
+/* ---------- Stat cards ---------- */
+.hms-stat-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+
+.hms-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hms-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #212121;
+  line-height: 1.2;
+}
+
+.hms-stat-label {
+  font-size: .78rem;
+  color: #607D8B;
+}
+
+/* ---------- Detail key/value pairs ---------- */
+.hms-detail-label {
+  font-size: .84rem;
+  color: #546E7A;
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 150px;
+}
+
+.hms-detail-value {
+  font-size: .84rem;
+  color: #212121;
+}
+
+/* ---------- Registration form ---------- */
+.hms-form-title {
+  color: #1976D2;
+  font-weight: 700;
+}
+
+.hms-section-label {
+  background: #E3F2FD;
+  color: #1565C0;
+  font-size: .88rem;
+  font-weight: 700;
+  padding: .45rem 1rem;
+  border-radius: 4px;
+  margin-bottom: .5rem;
+  margin-top: 1.5rem;
+}
+
+.form-label {
+  font-size: .875rem;
+  font-weight: 600;
+  color: #37474F;
+}
+
+.form-control, .form-select {
+  font-size: .875rem;
+  border: 1.5px solid #CFD8DC;
+  border-radius: 6px;
+  transition: border-color .15s, box-shadow .15s;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #1976D2;
+  box-shadow: 0 0 0 3px rgba(25,118,210,.15);
+  outline: none;
+}
+
+/* ---------- Buttons ---------- */
+.hms-btn-register {
+  background: #2E7D32;
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  border-radius: 8px;
+  transition: background .15s;
+}
+
+.hms-btn-register:hover {
+  background: #1B5E20;
+  color: #fff;
+}
+
+/* ---------- Scrollbar (webkit) ---------- */
+.hms-sidebar::-webkit-scrollbar,
+.hms-main::-webkit-scrollbar { width: 6px; }
+.hms-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 3px; }
+.hms-main::-webkit-scrollbar-thumb { background: #CFD8DC; border-radius: 3px; }
+
+/* ---------- Responsive tweaks ---------- */
+@media (max-width: 768px) {
+  .hms-sidebar {
+    width: 60px;
+    min-width: 60px;
+  }
+  .hms-nav-item span,
+  .hms-sidebar-logo,
+  .hms-sidebar .text-white-50 { display: none; }
+  .hms-nav-item { justify-content: center; padding: .75rem .5rem; }
+  .hms-nav-item i { margin: 0 !important; font-size: 1.2rem; }
+}

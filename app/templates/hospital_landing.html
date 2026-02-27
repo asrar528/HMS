@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}HMS – {{ hospital.hospital_name }}{% endblock %}
+
+{% block header_title %}{{ hospital.hospital_name }}{% endblock %}
+{% block header_sub %}{{ hospital.city }}, {{ hospital.state }} &nbsp;|&nbsp; Reg. {{ hospital.registration_number }}{% endblock %}
+{% block header_right %}
+  <span class="badge hms-badge-active me-2">
+    <i class="bi bi-circle-fill me-1 text-success" style="font-size:.55rem;"></i>Active
+  </span>
+{% endblock %}
+
+{% block body %}
+<div class="d-flex hms-shell">
+
+  <!-- ================================================================
+       SIDEBAR NAVIGATION
+       ================================================================ -->
+  <nav class="hms-sidebar d-flex flex-column">
+    <div class="hms-sidebar-logo py-3 px-3 text-white small fw-bold text-uppercase tracking-wide">
+      Navigation
+    </div>
+
+    {% set nav_items = [
+        ('bi-grid-fill',       'Dashboard',  '#dashboard-section'),
+        ('bi-people-fill',     'OPD',         '#opd-section'),
+        ('bi-hospital-fill',   'IPD',         '#ipd-section'),
+        ('bi-heart-pulse-fill','Emergency',   '#er-section'),
+        ('bi-scissors',        'OT',          '#ot-section'),
+        ('bi-capsule',         'Pharmacy',    '#pharmacy-section'),
+        ('bi-receipt',         'Billing',     '#billing-section'),
+        ('bi-bar-chart-fill',  'Reports',     '#reports-section'),
+        ('bi-info-circle-fill','About',       '#about-section'),
+    ] %}
+    <ul class="hms-nav-list list-unstyled mb-auto">
+      {% for icon, label, anchor in nav_items %}
+      <li>
+        <a href="{{ anchor }}" class="hms-nav-item d-flex align-items-center {% if label == 'Dashboard' %}active{% endif %}">
+          <i class="bi {{ icon }} me-3"></i>{{ label }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div class="px-3 pb-3">
+      <small class="text-white-50">HMS v1.0 &copy; 2026</small>
+    </div>
+  </nav><!-- /.hms-sidebar -->
+
+  <!-- ================================================================
+       MAIN CONTENT
+       ================================================================ -->
+  <main class="hms-main flex-grow-1 overflow-auto p-4">
+
+    <!-- ── Section: Dashboard ── -->
+    <section id="dashboard-section">
+      <h4 class="hms-page-heading mb-0">Welcome to {{ hospital.hospital_name }}</h4>
+      <p class="text-muted mb-4">Hospital Management System &mdash; Dashboard</p>
+
+      <!-- Quick-stats row -->
+      <div class="row g-3 mb-4">
+        {% set stats = [
+            ('bi-bed-fill',         'Total Beds',    hospital.total_beds,           '#1565C0'),
+            ('bi-thermometer-half', 'ICU Beds',      hospital.icu_beds,             '#6A1B9A'),
+            ('bi-scissors',         'Oper. Theaters',hospital.operation_theaters,   '#00695C'),
+            ('bi-building-fill',    'Hospital Type', hospital.hospital_type,        '#BF360C'),
+        ] %}
+        {% for icon, label, value, color in stats %}
+        <div class="col-sm-6 col-xl-3">
+          <div class="hms-stat-card p-3" style="border-left: 4px solid {{ color }};">
+            <div class="d-flex align-items-center gap-3">
+              <div class="hms-stat-icon" style="background:{{ color }}20; color:{{ color }};">
+                <i class="bi {{ icon }} fs-5"></i>
+              </div>
+              <div>
+                <div class="hms-stat-value">{{ value }}</div>
+                <div class="hms-stat-label">{{ label }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Hospital details card -->
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-clipboard2-data me-2"></i>Hospital Details
+        </div>
+        <div class="p-4">
+          <div class="row g-3">
+            {% set details = [
+                ('Registration No.',  hospital.registration_number),
+                ('License Number',    hospital.license_number),
+                ('Specialization',    hospital.specialization_type),
+                ('Accreditation',     hospital.accreditation),
+                ('Established',       hospital.established_year),
+                ('Administrator',     hospital.administrator_name),
+                ('Address',           hospital.address_line1 ~ (', ' ~ hospital.address_line2 if hospital.address_line2 else '') ~ ', ' ~ hospital.city ~ ', ' ~ hospital.state ~ ' – ' ~ hospital.pin_code),
+                ('Country',           hospital.country),
+                ('Primary Phone',     hospital.phone_primary),
+                ('Emergency Contact', hospital.emergency_contact),
+                ('Email',             hospital.email),
+                ('Website',           hospital.website or '—'),
+                ('GSTIN',             hospital.gstin or '—'),
+            ] %}
+            {% for label, value in details %}
+            <div class="col-md-6">
+              <div class="d-flex">
+                <span class="hms-detail-label me-2">{{ label }}:</span>
+                <span class="hms-detail-value">{{ value }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section><!-- /#dashboard-section -->
+
+    <!-- ── Section: OPD (placeholder) ── -->
+    <section id="opd-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-people-fill me-2"></i>OPD – Outpatient Department
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Patient registration, appointments, and queue management.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: IPD (placeholder) ── -->
+    <section id="ipd-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-hospital-fill me-2"></i>IPD – Inpatient Department
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Bed management, admissions, ward rounds, and discharge planning.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: Emergency (placeholder) ── -->
+    <section id="er-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-heart-pulse-fill me-2"></i>Emergency Department
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Triage, trauma workflows, and code pathways.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: OT (placeholder) ── -->
+    <section id="ot-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-scissors me-2"></i>Operation Theater &amp; Perioperative
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Surgical scheduling, AIMS, and instrument sterilization tracking.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: Pharmacy (placeholder) ── -->
+    <section id="pharmacy-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-capsule me-2"></i>Pharmacy &amp; Inventory
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Formulary management, dispensing, and stock control.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: Billing (placeholder) ── -->
+    <section id="billing-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-receipt me-2"></i>Billing &amp; Revenue Cycle
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Charges, insurance/TPA claims, and reconciliation.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: Reports (placeholder) ── -->
+    <section id="reports-section" class="mt-5">
+      <div class="hms-card p-0 mb-4">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-bar-chart-fill me-2"></i>Reports &amp; Analytics
+        </div>
+        <div class="p-4 text-muted">
+          <i class="bi bi-hourglass-split me-2 text-warning"></i>
+          Module coming soon — Clinical, operational, and financial KPI dashboards.
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section: About ── -->
+    <section id="about-section" class="mt-5">
+      <div class="hms-card p-0 mb-5">
+        <div class="hms-card-header px-4 py-2">
+          <i class="bi bi-info-circle-fill me-2"></i>About
+        </div>
+        <div class="p-4">
+          <p class="mb-1"><strong>Hospital Management System (HMS)</strong></p>
+          <p class="text-muted mb-1">Version 1.0 &nbsp;|&nbsp; Built with Python + Flask</p>
+          <p class="text-muted mb-1">Architecture: DIContainer → Services → Repositories → SQLite</p>
+          <p class="text-muted">Designed for super-specialty hospitals as per NHS-grade requirements.</p>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /.hms-main -->
+</div><!-- /.d-flex -->
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Active-nav highlight on scroll / click
+  document.querySelectorAll('.hms-nav-item').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.hms-nav-item').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+</script>
+{% endblock %}
